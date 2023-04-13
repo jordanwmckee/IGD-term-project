@@ -45,15 +45,26 @@ public class v1PlayerController : MonoBehaviour
             carRigidbody.velocity = transform.forward * speed;
         }
     }
+    
+    private void Update(){
+        //Check if the user has pressed enter
+        if(Input.GetKeyDown(KeyCode.Return)){
+            CheckAnswer();
+        }
+    }
 
     public void CheckAnswer()
     {
         // Check if the answer is correct
         int answer;
-        if (int.TryParse(answerInputField.text, out answer) && answer == correctAnswer)
-        {
+        if (int.TryParse(answerInputField.text, out answer)){
             // Set the car to accelerate if the answer is correct
-            isAccelerating = true;
+            if (answer == correctAnswer){
+                isAccelerating = true;
+            }
+            else {
+                isAccelerating = false;
+            }
 
             // Generate a new problem
             GenerateProblem();
