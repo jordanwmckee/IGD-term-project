@@ -1,5 +1,9 @@
+using System.Security.AccessControl;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
@@ -9,9 +13,13 @@ public class v1PlayerController : MonoBehaviour
     public float speed = 10f;
     public float acceleration = 5f;
     public float maxSpeed = 50f;
-
+    public float finishLineXPosition = 25f; 
+    public Animator animator; 
+    public Button startButton; 
+    
     private Rigidbody carRigidbody;
     private bool isAccelerating = false;
+    private bool hasStarted = false; 
 
     // References to UI elements
     public TMP_InputField answerInputField;
@@ -25,24 +33,34 @@ public class v1PlayerController : MonoBehaviour
     {
         carRigidbody = GetComponent<Rigidbody>();
         GenerateProblem();
+        
+        startButton.onClick.AddListener(StartGame); 
     }
 
     private void FixedUpdate()
     {
         // Check if the car is accelerating
-        if (isAccelerating)
-        {
-            // Increase the car's speed up to the maximum speed
-            if (carRigidbody.velocity.magnitude < maxSpeed)
+        if (hasStarted) { 
+            if (isAccelerating)
             {
-                carRigidbody.AddForce(transform.forward * acceleration);
+                // Increase the car's speed up to the maximum speed
+                if (carRigidbody.velocity.magnitude < maxSpeed)
+                {
+                    carRigidbody.AddForce(transform.right * acceleration); // Changed direction of force from forward to right
+                }
+            }
+
+            // Move the car forward at a constant speed if not accelerating
+            else
+            {
+                carRigidbody.velocity = transform.right * speed; // Changed direction of velocity from forward to right
             }
         }
-
-        // Move the car forward at a constant speed if not accelerating
-        else
-        {
-            carRigidbody.velocity = transform.forward * speed;
+        
+        // Check if the object has reached the finish line
+        if (transform.position.x > finishLineXPosition) {
+            animator.SetTrigger("Finish"); // Trigger animation when the object reaches the finish line
+            hasStarted = false;
         }
     }
     
@@ -99,7 +117,14 @@ public class v1PlayerController : MonoBehaviour
         }
 
         // Display the problem in the UI
-        problemText.text = $"{num1} {op} {num2} =";
-        answerInputField.text = "";
+        if (hasStarted){ 
+            problemText.text = $"{num1} {op} {num2} =";
+            answerInputField.ActivateInputField(); 
+        }
+    }
+    
+    public void StartGame(){ 
+        hasStarted = true;
+        GenerateProblem();
     }
 }
