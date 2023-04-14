@@ -20,6 +20,7 @@ public class v1PlayerController : MonoBehaviour
     private Rigidbody carRigidbody;
     private bool isAccelerating = false;
     private bool hasStarted = false; 
+    private Vector3 middleScreenPosition; 
 
     // References to UI elements
     public TMP_InputField answerInputField;
@@ -35,6 +36,7 @@ public class v1PlayerController : MonoBehaviour
         GenerateProblem();
         
         startButton.onClick.AddListener(StartGame); 
+        middleScreenPosition = new Vector3(transform.position.x, transform.position.y, 0f); 
     }
 
     private void FixedUpdate()
@@ -54,6 +56,12 @@ public class v1PlayerController : MonoBehaviour
             else
             {
                 carRigidbody.velocity = transform.right * speed; // Changed direction of velocity from forward to right
+            }
+            
+            // Follow the player once they are in the middle of the screen
+            if(transform.position.x > middleScreenPosition.x){
+                Vector3 cameraPos = new Vector3(transform.position.x, 0, -10f); 
+                Camera.main.transform.position = cameraPos; 
             }
         }
         
