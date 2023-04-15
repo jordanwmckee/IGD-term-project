@@ -3,7 +3,7 @@ using System;
 
 public class DifficultyManager : MonoBehaviour
 {
-    public int[] difficultyOptions; // 0=easy, 1=medium, 2=hard, 3=einstein
+    public int[] difficultyOptions; // 1=easy, 2=medium, 3=hard, 4=einstein
 
     private void Start() {
         if (PlayerPrefs.HasKey("Difficulties")) {
@@ -11,7 +11,7 @@ public class DifficultyManager : MonoBehaviour
             updateDifficultyOptions();
         } else {
             // The key does not exist in PlayerPrefs, set default
-            difficultyOptions[0] = 0;
+            difficultyOptions[0] = 1;
         }
     }
 
@@ -23,7 +23,6 @@ public class DifficultyManager : MonoBehaviour
         for (int i = 0; i < difficultiesStringArray.Length; i++) {
             difficultyOptions[i] = int.Parse(difficultiesStringArray[i]);
         }
-
     }
 
     // Sets difficulty as completed so it will unlock button
@@ -40,7 +39,7 @@ public class DifficultyManager : MonoBehaviour
     }
 
     public void resetDifficulties() {
-        difficultyOptions = new int[1] { 0 };
+        difficultyOptions = new int[1] { 1 };
         PlayerPrefs.DeleteKey("Difficulties");
     }
 }

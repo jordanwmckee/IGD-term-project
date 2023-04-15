@@ -9,14 +9,14 @@ public class DifficultyButton : MonoBehaviour
     public Color selectedColor;
     public Color deselectedColor;
     public Color inactiveColor;
-    [SerializeField] public Image locked;
+    [SerializeField] private Image locked;
     public bool isSelected = false;
     DifficultyManager difficultyManager;
     private bool isEasy;
 
     private void Start()
     {
-        if (difficulty == 0) isEasy = true;
+        if (difficulty == 1) isEasy = true;
         difficultyManager = FindObjectOfType<DifficultyManager>();
 
         // toggle inactive unless unlocked
@@ -35,7 +35,8 @@ public class DifficultyButton : MonoBehaviour
         if (difficultyManager.difficultyOptions.Contains(difficulty) && GetComponent<Image>().color == inactiveColor) {
             setActive();
         } else if (!difficultyManager.difficultyOptions.Contains(difficulty)) {
-            setInactive();
+            if (!isEasy)
+                setInactive();
         }
     }
 

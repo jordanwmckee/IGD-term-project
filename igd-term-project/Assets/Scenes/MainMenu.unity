@@ -1943,7 +1943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50de554b55afd443ba9e1fb3e312dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 0
+  difficulty: 1
   selectedColor: {r: 0.9056604, g: 0.17122364, b: 0.12388753, a: 1}
   deselectedColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 0, g: 0, b: 0, a: 1}
@@ -2276,7 +2276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50de554b55afd443ba9e1fb3e312dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 3
+  difficulty: 4
   selectedColor: {r: 0.9056604, g: 0.17122364, b: 0.12388753, a: 1}
   deselectedColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 0, g: 0, b: 0, a: 1}
@@ -2430,7 +2430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50de554b55afd443ba9e1fb3e312dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 1
+  difficulty: 2
   selectedColor: {r: 0.9056604, g: 0.17122364, b: 0.12388753, a: 1}
   deselectedColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 0, g: 0, b: 0, a: 1}
@@ -2921,7 +2921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50de554b55afd443ba9e1fb3e312dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 2
+  difficulty: 3
   selectedColor: {r: 0.9056604, g: 0.17122364, b: 0.12388753, a: 1}
   deselectedColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 0, g: 0, b: 0, a: 1}
