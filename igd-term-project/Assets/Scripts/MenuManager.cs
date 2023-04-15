@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MenuManager : MonoBehaviour
 {
     // build number of scene to start when start button is pressed
-    private int gameStartScene;
+    [SerializeField] private int gameStartScene;
     public static MenuManager instance;
 
     private void Awake() {
