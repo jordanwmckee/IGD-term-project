@@ -1,16 +1,42 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Linq;
 
 public class DifficultyButton : MonoBehaviour
 {
     public int difficulty;
     public Color selectedColor;
     public Color deselectedColor;
+    public Color inactiveColor;
+    [SerializeField] public Image locked;
     public bool isSelected = false;
+    DifficultyManager difficultyManager;
+    private bool isEasy;
 
     private void Start()
     {
-        if (isSelected) selectDifficulty();
+        if (difficulty == 0) isEasy = true;
+        difficultyManager = FindObjectOfType<DifficultyManager>();
+
+        // toggle inactive unless unlocked
+        checkUnlocked();
+
+        // select button if default is set to selected
+        if (isSelected) 
+            selectDifficulty();
+    }
+
+    private void Update() {
+        checkUnlocked();
+    }
+
+    private void checkUnlocked() {
+        if (difficultyManager.difficultyOptions.Contains(difficulty) && GetComponent<Image>().color == inactiveColor) {
+            setActive();
+        } else if (!difficultyManager.difficultyOptions.Contains(difficulty)) {
+            setInactive();
+        }
     }
 
     public void OnClick() {
@@ -26,9 +52,23 @@ public class DifficultyButton : MonoBehaviour
         foreach (DifficultyButton button in transform.parent.GetComponentsInChildren<DifficultyButton>()) {
             if (button != this) {
                 button.isSelected = false;
-                button.GetComponent<Image>().color = deselectedColor;
+                if (button.GetComponent<Button>().interactable == true) {
+                    button.GetComponent<Image>().color = deselectedColor;
+                }
             } 
         }
         MenuManager.instance.setGameStartScene(difficulty);
+    }
+
+    public void setActive() {
+        GetComponent<Image>().color = deselectedColor;
+        GetComponent<Button>().interactable = true;
+        if (!isEasy) locked.gameObject.SetActive(false);
+    }
+
+    public void setInactive() {
+        GetComponent<Image>().color = inactiveColor;
+        GetComponent<Button>().interactable = false;
+        if (!isEasy) locked.gameObject.SetActive(true);
     }
 }
