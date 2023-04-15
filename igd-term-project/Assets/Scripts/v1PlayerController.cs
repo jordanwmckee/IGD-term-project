@@ -14,7 +14,8 @@ public class v1PlayerController : MonoBehaviour
     public float acceleration = 5f;
     public float maxSpeed = 50f;
     public float finishLineXPosition = 25f; 
-    public Animator animator; 
+    public Animator carAnimator; 
+    public Animator finishAnimator; 
     public Button startButton; 
     
     private Rigidbody carRigidbody;
@@ -67,7 +68,7 @@ public class v1PlayerController : MonoBehaviour
         
         // Check if the object has reached the finish line
         if (transform.position.x > finishLineXPosition) {
-            animator.SetTrigger("Finish"); // Trigger animation when the object reaches the finish line
+            finishAnimator.SetTrigger("Finish"); // Trigger animation when the object reaches the finish line
             hasStarted = false;
         }
     }
@@ -132,6 +133,7 @@ public class v1PlayerController : MonoBehaviour
     }
     
     public void StartGame(){ 
+        carAnimator.Play("Miamianimation");
         hasStarted = true;
         GenerateProblem();
     }

@@ -26,12 +26,9 @@ public class v1NPCScript : MonoBehaviour
     {
         if (hasStarted)
         {
-            waitTimer -= Time.deltaTime;
-            if(waitTimer <= 0f)
-            {
                 // Move the NPC forward at a constant speed
                 npcRigidbody.velocity = new Vector3(speed, 0f, 0f);
-            }
+
         }
 
         if (transform.position.x > finishLineXPosition) 
