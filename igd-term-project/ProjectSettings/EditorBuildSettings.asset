@@ -17,10 +17,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MiamiScene.unity
     guid: 9bce775c7d470a14087fce7c6089ea63
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/v1DesertScene.unity
     guid: 49e32b55deba985498db41787f61abe1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ParallaxTesting.unity
     guid: 4bbf790de9856604983d53ce909c4e45
+  - enabled: 1
+    path: Assets/Scenes/CyberpunkScene.unity
+    guid: ef8fee1b0abd54444bb98a0196d81e20
+  - enabled: 1
+    path: Assets/Scenes/ForestScene.unity
+    guid: af0da9de14f3bb9488a13de5b802c405
+  - enabled: 1
+    path: Assets/Scenes/MountainScene.unity
+    guid: 26c06ea759b420b4fbf7c25618736d7e
   m_configObjects: {}
