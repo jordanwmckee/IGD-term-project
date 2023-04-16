@@ -33,6 +33,7 @@ public class v1NPCScript : MonoBehaviour
 
         if (transform.position.x > finishLineXPosition) 
         {
+            npcRigidbody.velocity = Vector3.zero;
             animator.SetTrigger("NPCFinish"); // Trigger animation when the object reaches the finish line
         }
     }

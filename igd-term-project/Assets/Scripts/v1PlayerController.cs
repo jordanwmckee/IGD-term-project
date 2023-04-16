@@ -69,6 +69,7 @@ public class v1PlayerController : MonoBehaviour
         
         // Check if the object has reached the finish line
         if (transform.position.x > finishLineXPosition) {
+            carRigidbody.velocity = Vector3.zero;
             finishAnimator.SetTrigger("Finish"); // Trigger animation when the object reaches the finish line
             hasStarted = false;
         }
