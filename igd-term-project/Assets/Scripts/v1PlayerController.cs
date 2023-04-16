@@ -17,6 +17,7 @@ public class v1PlayerController : MonoBehaviour
     public Animator carAnimator; 
     public Animator finishAnimator; 
     public Button startButton; 
+    public GameObject SpeechBubble;
     
     private Rigidbody carRigidbody;
     private bool isAccelerating = false;
@@ -134,6 +135,8 @@ public class v1PlayerController : MonoBehaviour
     
     public void StartGame(){ 
         carAnimator.Play("Miamianimation");
+        SpeechBubble.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(false);
         hasStarted = true;
         GenerateProblem();
     }
