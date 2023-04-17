@@ -123,13 +123,29 @@ public class v1PlayerController : MonoBehaviour
             operands[i] = UnityEngine.Random.Range(-opMax, opMax);
         }
 
+        // Weed out some negatives
+        for (int i = 0; i < 5; i++)
+        {
+            if (operands[i] < 0)
+            {
+                if (1 == UnityEngine.Random.Range(0, 100) % 4)
+                {
+                    operands[i] = operands[i];
+                }
+                else
+                {
+                    operands[i] = -operands[i];
+                }
+            }
+        }
+
 
         correctAnswer = 1;
         bool open = false;
         // First term inside parenthesis?
             // First term negative and need wrapped?
         string problemString = "";
-        if (1 == UnityEngine.Random.Range(0, 100) % 2)
+        if (1 == UnityEngine.Random.Range(0, 100) % 10)
         {
             if (operands[0] < 0) 
             {
