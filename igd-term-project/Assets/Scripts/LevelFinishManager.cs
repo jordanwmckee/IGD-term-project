@@ -25,8 +25,11 @@ public class LevelFinishManager : MonoBehaviour
         text.text = endText;
         endScreenPanel.SetActive(true);
         if (win) {
-            // unlock next level if necessary
-            if (difficultyManager.difficultyOptions[difficultyManager.difficultyOptions.Length - 1] == SceneManager.GetActiveScene().buildIndex) {
+            // unlock next level if you are on the difficulty 1 below a locked one or if you are not on the hardest difficulty
+            if (
+                difficultyManager.difficultyOptions[difficultyManager.difficultyOptions.Length - 1] != 4 && 
+                difficultyManager.difficultyOptions[difficultyManager.difficultyOptions.Length - 1] == SceneManager.GetActiveScene().buildIndex
+                ) {
                 difficultyManager.unlockDifficulty();
                 newDifficultyText.SetActive(true);
             }
