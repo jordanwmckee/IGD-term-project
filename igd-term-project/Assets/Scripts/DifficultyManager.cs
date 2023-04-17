@@ -3,15 +3,12 @@ using System;
 
 public class DifficultyManager : MonoBehaviour
 {
-    public int[] difficultyOptions; // 1=easy, 2=medium, 3=hard, 4=einstein
+    public int[] difficultyOptions = {1}; // 1=easy, 2=medium, 3=hard, 4=einstein
 
     private void Start() {
         if (PlayerPrefs.HasKey("Difficulties")) {
             // The key exists in PlayerPrefs
             updateDifficultyOptions();
-        } else {
-            // The key does not exist in PlayerPrefs, set default
-            difficultyOptions[0] = 1;
         }
     }
 

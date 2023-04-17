@@ -14,28 +14,48 @@ public class v1NPCScript : MonoBehaviour
     public float offset = 3f; // Offset from the center of the road
     public float waitTimer = 3f; // Timer to move across the screen
     private bool hasStarted = false;
+    public bool hasFinished = false;
     private Rigidbody npcRigidbody;
-    public Animator animator;
+    // public Animator animator;
+
+    private LevelFinishManager levelFinishManager;
+    public static v1NPCScript instance;
+    private v1PlayerController player;
+
+    private void Awake() {
+        instance = this;
+    }
 
     private void Start()
     {
+        levelFinishManager = LevelFinishManager.instance;
+        player = v1PlayerController.instance;
         npcRigidbody = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
     {
+        if (player.hasFinished) {
+            SetFinished();
+        }
         if (hasStarted)
         {
-                // Move the NPC forward at a constant speed
-                npcRigidbody.velocity = new Vector3(speed, 0f, 0f);
+            // Move the NPC forward at a constant speed
+            npcRigidbody.velocity = new Vector3(speed, 0f, 0f);
 
         }
 
         if (transform.position.x > finishLineXPosition) 
         {
-            npcRigidbody.velocity = Vector3.zero;
-            animator.SetTrigger("NPCFinish"); // Trigger animation when the object reaches the finish line
+            SetFinished();
+            levelFinishManager.endRace("YOU LOSE...", false);
         }
+    }
+
+    private void SetFinished() {
+        npcRigidbody.velocity = Vector3.zero;
+        // animator.SetTrigger("NPCFinish"); // Trigger animation when the object reaches the finish line
+        hasFinished = true;
     }
 
     public void StartRace()
