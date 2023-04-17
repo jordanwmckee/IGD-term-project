@@ -126,160 +126,107 @@ public class v1PlayerController : MonoBehaviour
 
         correctAnswer = 1;
         bool open = false;
-        bool justDivided = false;
-        string stepBack = "";
-        char lastOp ='\0';
-        int lastState = 0;
-
+        // First term inside parenthesis?
+            // First term negative and need wrapped?
         string problemString = "";
         if (1 == UnityEngine.Random.Range(0, 100) % 2)
         {
-            problemString = $"({operands[0]} ";
-            open = true;
+            if (operands[0] < 0) 
+            {
+                problemString = $"(({operands[0]}) ";
+                open = true;
+            }
+            else
+            {
+                problemString = $"({operands[0]} ";
+                open = true;
+            }
         }
-        else problemString = $"{operands[0]} ";
+        else
+        {
+            if (operands[0] < 0)
+            {
+                problemString = $"({operands[0]}) ";
+            }
+            else
+            {
+                problemString = $"{operands[0]} ";
+            }
+        }
 
         for (int i = 0; i < difficulty; i++)
         {
             // Which operator are we using this time?
-            int operatorIndex = UnityEngine.Random.Range(0, 4);
+            int operatorIndex = UnityEngine.Random.Range(0, 3);
 
-            // Don't allow expressions to divide twice in a row
-            if (justDivided && operatorIndex == 3)
+            // Wrap negative operands in parenthesis
+                // Open or close parenthesis as needed
+            string operand;
+            if (operands[i + 1] < 0)
             {
-                operatorIndex = UnityEngine.Random.Range(0, 3);
+                if (1 == UnityEngine.Random.Range(0, 100) % 2)
+                {
+                    if (open)
+                    {
+                        open = false;
+                        operand = $"({operands[i + 1]})) ";
+                    }
+                    else
+                    {
+                        open = true;
+                        operand = $"(({operands[i + 1]}) ";
+
+                    }
+                }
+                else
+                {
+                    operand = $"({operands[i + 1]}) ";
+
+                }
+            }
+            else
+            {
+                if (1 == UnityEngine.Random.Range(0, 100) % 2)
+                {
+                    if (open)
+                    {
+                        open = false;
+                        operand = $"{operands[i + 1]}) ";
+                    }
+                    else
+                    {
+                        open = true;
+                        operand = $"({operands[i + 1]} ";
+
+                    }
+                }
+                else
+                {
+                    operand = $"{operands[i + 1]} ";
+
+                }
             }
 
-            // Problem building logic with random numbers and operators.
+            // append the operator to the front of the string
             switch (operatorIndex)
             {
                 case 0:
-                    justDivided = false;
-                    lastOp = '+';
-                    stepBack = problemString;
-                    if (1 == UnityEngine.Random.Range(0, 100) % 2)
-                    {
-                        if (open)
-                        {
-                            open = false;
-                            problemString += $"+ {operands[i + 1]}) ";
-                            lastState = 2;
-                        } else
-                        {
-                            open = true;
-                            problemString += $"+ ({operands[i + 1]} ";
-                            lastState = 1;
-                        }
-                    } 
-                    else
-                    {
-                        problemString += $"+ {operands[i + 1]} ";
-                        lastState = 0;
-                    }
+                    problemString += $"+ {operand}";
                     break;
                 case 1:
-                    justDivided = false;
-                    lastOp = '-';
-                    stepBack = problemString;
-                    if (1 == UnityEngine.Random.Range(0, 100) % 2)
-                    {
-                        if (open)
-                        {
-                            open = false;
-                            problemString += $"- {operands[i + 1]}) ";
-                            lastState = 2;
-                        }
-                        else
-                        {
-                            open = true;
-                            problemString += $"- ({operands[i + 1]} ";
-                            lastState = 1;
-                        }
-                    }
-                    else
-                    {
-                        problemString += $"- {operands[i + 1]} ";
-                        lastState = 0;
-                    }
+                    problemString += $"- {operand}";
                     break;
                 case 2:
-                    justDivided = false;
-                    lastOp = '*';
-                    stepBack = problemString;
-                    if (1 == UnityEngine.Random.Range(0, 100) % 2)
-                    {
-                        if (open)
-                        {
-                            open = false;
-                            problemString += $"* {operands[i + 1]}) ";
-                            lastState = 2;
-                        }
-                        else
-                        {
-                            open = true;
-                            problemString += $"* ({operands[i + 1]} ";
-                            lastState = 1;
-                        }
-                    }
-                    else
-                    {
-                        problemString += $"* {operands[i + 1]} ";
-                        lastState = 0;
-                    }
+                    problemString += $"* {operand}";
                     break;
-                case 3:
-                    justDivided = true;
-                    if (1 == UnityEngine.Random.Range(0, 100) % 2)
-                    {
-                        // Divide-by-zero safeguard
-                        if (operands[i + 1] == 0)
-                        {
-                            operands[i + 1] = 1;
-                        }
-
-                        // Rebuild last piece with adjusted operand
-                        if (i == 0)
-                        {
-                            problemString = $"{operands[i] * operands[i + 1]} ";
-                        }
-                        else
-                        {
-                            if (lastState == 0)
-                            {
-                                problemString = stepBack + $"{lastOp} {operands[i] * operands[i + 1]} ";
-                            }
-                            else if (lastState == 1)
-                            {
-                                problemString = stepBack + $"{lastOp} ({operands[i] * operands[i + 1]} ";
-                            }
-                            else
-                            {
-                                problemString = stepBack + $"{lastOp} {operands[i] * operands[i + 1]}) ";
-                            }
-                        }
-                        if (open)
-                        {
-                            open = false;
-                            problemString += $"/ {operands[i + 1]}) ";
-                        }
-                        else
-                        {
-                            open = true;
-                            problemString += $"/ ({operands[i + 1]} ";
-                        }
-                    }
-                    else
-                    {
-                        problemString += $"/ {operands[i + 1]} ";
-                    }
-                    break;
-            }
+                }
         }
 
         if (open)
         {
             problemString += ") ";
         }
+        Debug.Log(problemString);
         correctAnswer = EvaluateExpression(problemString);
         problemString += "= ";
         Debug.Log(correctAnswer);
@@ -299,19 +246,36 @@ public class v1PlayerController : MonoBehaviour
 
     public static int EvaluateExpression(string expression)
     {
+        // Remove all spaces from the expression
+        expression = expression.Replace(" ", "");
+        Debug.Log(expression);
+
         var result = 0;
         var operatorType = '+';
         var number = "";
         var stack = new Stack<int>();
         var lastOperatorStack = new Stack<char>();
+        bool negging = false;
+        char lastChar = ' ';
 
         foreach (var ch in expression)
         {
-            if (Char.IsDigit(ch))
+
+            if (lastChar == '(')
+            {
+                negging = true;
+            } 
+            else
+            {
+                negging = false;
+            }
+            lastChar = ch;
+            Debug.Log($"num: {number} size: {number.Length}");
+            if (Char.IsDigit(ch) || (ch == '-' && negging))
             {
                 number += ch;
             }
-            else if (ch == '+' || ch == '-' || ch == '*' || ch == '/')
+            else if (ch == '+' || ch == '-' || ch == '*')
             {
                 if (number.Length > 0)
                 {
@@ -341,10 +305,6 @@ public class v1PlayerController : MonoBehaviour
 
                 result = ApplyOperator(lastResult, result, lastOperator);
             }
-            else if (ch == ' ')
-            {
-                // Ignore spaces
-            }
             else
             {
                 throw new ArgumentException($"Invalid character: {ch}");
@@ -369,8 +329,6 @@ public class v1PlayerController : MonoBehaviour
                 return leftOperand - rightOperand;
             case '*':
                 return leftOperand * rightOperand;
-            case '/':
-                return leftOperand / rightOperand;
             default:
                 throw new ArgumentException($"Invalid operator: {operatorType}");
         }
