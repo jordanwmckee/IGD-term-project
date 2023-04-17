@@ -127,16 +127,6 @@ public class v1PlayerController : MonoBehaviour
         }
     }
 
-    /*
-     * Pseudocoding this shit out!
-     * So basically, when generateProblem() is called, the first operand is always generated
-     * then depending on difficulty, [1-4] operands will be generated to follow.
-     * 
-     * 
-     * 
-     * 
-     */
-
     private void GenerateProblem()
     {
         for (int i = 0; i < 5; i++)
