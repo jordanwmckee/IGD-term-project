@@ -29,14 +29,16 @@ public class v1PlayerController : MonoBehaviour
     public TextMeshProUGUI problemText;
 
     private int difficulty;
-
-    private int num1;
-    private int num2;
+    private int[] operands;
+    private int opMax;
     private int correctAnswer;
 
     private void Start()
     {
         difficulty = MenuManager.instance.getDifficulty();
+        operands = new int[5];
+        opMax = 10;
+
         carRigidbody = GetComponent<Rigidbody>();
         GenerateProblem();
         
@@ -103,37 +105,135 @@ public class v1PlayerController : MonoBehaviour
         }
     }
 
+    /*
+     * Pseudocoding this shit out!
+     * So basically, when generateProblem() is called, the first operand is always generated
+     * then depending on difficulty, [1-4] operands will be generated to follow.
+     * 
+     * 
+     * 
+     * 
+     */
+
     private void GenerateProblem()
     {
-        Debug.Log(difficulty);
-        // Generate two random numbers and a random operator (+, -, *, /)
-        num1 = Random.Range(1, 10);
-        num2 = Random.Range(1, 10);
-        int operatorIndex = Random.Range(0, 4);
-        char op = '+';
-        switch (operatorIndex)
+        for (int i = 0; i < 5; i++)
         {
-            case 0:
-                correctAnswer = num1 + num2;
-                break;
-            case 1:
-                op = '-';
-                correctAnswer = num1 - num2;
-                break;
-            case 2:
-                op = '*';
-                correctAnswer = num1 * num2;
-                break;
-            case 3:
-                op = '/';
-                num1 = Random.Range(1, 10) * num2;
-                correctAnswer = num1 / num2;
-                break;
+            operands[i] = Random.Range(-opMax, opMax);
         }
 
-        // Display the problem in the UI
+
+        correctAnswer = 1;
+        bool open = false;
+        string problemString = "";
+        if (1 == Random.Range(0, 100) % 2)
+        {
+            problemString = $"({operands[0]} ";
+            open = true;
+        }
+        else problemString = $"{operands[0]} ";
+
+        for (int i = 0; i < difficulty; i++)
+        {
+            int operatorIndex = Random.Range(0, 4);
+            switch (operatorIndex)
+            {
+                case 0:
+                    if (1 == Random.Range(0, 100) % 2)
+                    {
+                        if (open)
+                        {
+                            open = false;
+                            problemString += $"+ {operands[i + 1]} ) ";
+                        } else
+                        {
+                            open = true;
+                            problemString += $"+ ( {operands[i + 1]} ";
+                        }
+                    } 
+                    else
+                    {
+                        problemString += $"+ {operands[i + 1]} ";
+                    }
+                    // correctAnswer += operands[i+1];
+                    break;
+                case 1:
+                    if (1 == Random.Range(0, 100) % 2)
+                    {
+                        if (open)
+                        {
+                            open = false;
+                            problemString += $"+ {operands[i + 1]} ) ";
+                        }
+                        else
+                        {
+                            open = true;
+                            problemString += $"+ ( {operands[i + 1]} ";
+                        }
+                    }
+                    else
+                    {
+                        problemString += $"+ {operands[i + 1]} ";
+                    }
+
+                    // correctAnswer -= operands[i+1];
+                    break;
+                case 2:
+                    if (1 == Random.Range(0, 100) % 2)
+                    {
+                        if (open)
+                        {
+                            open = false;
+                            problemString += $"+ {operands[i + 1]} ) ";
+                        }
+                        else
+                        {
+                            open = true;
+                            problemString += $"+ ( {operands[i + 1]} ";
+                        }
+                    }
+                    else
+                    {
+                        problemString += $"+ {operands[i + 1]} ";
+                    }
+
+                    // correctAnswer *= operands[i+1];
+                    break;
+                case 3:
+                    if (1 == Random.Range(0, 100) % 2)
+                    {
+                        if (open)
+                        {
+                            open = false; 
+                            problemString += $"+ {operands[i + 1]} ) ";
+                        }
+                        else
+                        {
+                            open = true;
+                            problemString += $"+ ( {operands[i + 1]} ";
+                        }
+                    }
+                    else
+                    {
+                        problemString += $"+ {operands[i + 1]} ";
+                    }
+
+                    // operands[0] = Random.Range(1, 10) * operands[1];
+                    // correctAnswer = operands[0] / operands[1];
+                    break;
+            }
+        }
+
+        if (open)
+        {
+            problemString += ") = ";
+        }
+        else
+        {
+            problemString += "= ";
+        }
         if (hasStarted){ 
-            problemText.text = $"{num1} {op} {num2} =";
+            problemText.text = problemString;
             answerInputField.ActivateInputField();
         }
     }
