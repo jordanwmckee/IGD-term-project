@@ -226,7 +226,6 @@ public class v1PlayerController : MonoBehaviour
         {
             problemString += ") ";
         }
-        Debug.Log(problemString);
         correctAnswer = EvaluateExpression(problemString);
         problemString += "= ";
         Debug.Log(correctAnswer);
@@ -248,7 +247,6 @@ public class v1PlayerController : MonoBehaviour
     {
         // Remove all spaces from the expression
         expression = expression.Replace(" ", "");
-        Debug.Log(expression);
 
         var result = 0;
         var operatorType = '+';
@@ -270,7 +268,6 @@ public class v1PlayerController : MonoBehaviour
                 negging = false;
             }
             lastChar = ch;
-            Debug.Log($"num: {number} size: {number.Length}");
             if (Char.IsDigit(ch) || (ch == '-' && negging))
             {
                 number += ch;
