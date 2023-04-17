@@ -28,12 +28,15 @@ public class v1PlayerController : MonoBehaviour
     public TMP_InputField answerInputField;
     public TextMeshProUGUI problemText;
 
+    private int difficulty;
+
     private int num1;
     private int num2;
     private int correctAnswer;
 
     private void Start()
     {
+        difficulty = MenuManager.instance.getDifficulty();
         carRigidbody = GetComponent<Rigidbody>();
         GenerateProblem();
         
@@ -102,6 +105,7 @@ public class v1PlayerController : MonoBehaviour
 
     private void GenerateProblem()
     {
+        Debug.Log(difficulty);
         // Generate two random numbers and a random operator (+, -, *, /)
         num1 = Random.Range(1, 10);
         num2 = Random.Range(1, 10);
@@ -130,7 +134,7 @@ public class v1PlayerController : MonoBehaviour
         // Display the problem in the UI
         if (hasStarted){ 
             problemText.text = $"{num1} {op} {num2} =";
-            answerInputField.ActivateInputField(); 
+            answerInputField.ActivateInputField();
         }
     }
     
