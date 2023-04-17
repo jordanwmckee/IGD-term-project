@@ -16,13 +16,14 @@ public class v1PlayerController : MonoBehaviour
     public float maxSpeed = 50f;
     public float finishLineXPosition = 25f; 
     public Animator carAnimator; 
-    public Animator finishAnimator; 
+    // public Animator finishAnimator; 
     public Button startButton; 
     public GameObject SpeechBubble;
     
     private Rigidbody carRigidbody;
     private bool isAccelerating = false;
     private bool hasStarted = false; 
+    public bool hasFinished = false;
     private Vector3 middleScreenPosition; 
 
     // References to UI elements
@@ -34,12 +35,21 @@ public class v1PlayerController : MonoBehaviour
     private int opMax;
     private int correctAnswer;
 
+    private LevelFinishManager levelFinishManager;
+    public static v1PlayerController instance;
+    private v1NPCScript npc;
+
+    private void Awake() {
+        instance = this;
+    }
+
     private void Start()
     {
         difficulty = MenuManager.instance.getDifficulty();
         operands = new int[5];
         opMax = 10;
-
+        levelFinishManager = LevelFinishManager.instance;
+        npc = v1NPCScript.instance;
         carRigidbody = GetComponent<Rigidbody>();
         GenerateProblem();
         
@@ -49,6 +59,10 @@ public class v1PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (npc.hasFinished) {
+            SetFinished();
+        }
+
         // Check if the car is accelerating
         if (hasStarted) { 
             if (isAccelerating)
@@ -75,9 +89,9 @@ public class v1PlayerController : MonoBehaviour
         
         // Check if the object has reached the finish line
         if (transform.position.x > finishLineXPosition) {
-            carRigidbody.velocity = Vector3.zero;
-            finishAnimator.SetTrigger("Finish"); // Trigger animation when the object reaches the finish line
-            hasStarted = false;
+            SetFinished();
+            // open panel for game end that indicates win/loss
+            levelFinishManager.endRace("YOU WIN!", true);
         }
     }
     
@@ -86,6 +100,13 @@ public class v1PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Return)){
             CheckAnswer();
         }
+    }
+
+    private void SetFinished() {
+        carRigidbody.velocity = Vector3.zero;
+        // finishAnimator.SetTrigger("Finish"); // Trigger animation when the object reaches the finish line
+        hasStarted = false;
+        hasFinished = true;
     }
 
     public void CheckAnswer()
