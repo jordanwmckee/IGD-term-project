@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class v1PlayerController : MonoBehaviour
 {
@@ -29,8 +30,9 @@ public class v1PlayerController : MonoBehaviour
     public TMP_InputField answerInputField;
     public TextMeshProUGUI problemText;
 
-    private int num1;
-    private int num2;
+    private int difficulty;
+    private int[] operands;
+    private int opMax;
     private int correctAnswer;
 
     private LevelFinishManager levelFinishManager;
@@ -43,6 +45,9 @@ public class v1PlayerController : MonoBehaviour
 
     private void Start()
     {
+        difficulty = MenuManager.instance.getDifficulty();
+        operands = new int[5];
+        opMax = 10;
         levelFinishManager = LevelFinishManager.instance;
         npc = v1NPCScript.instance;
         carRigidbody = GetComponent<Rigidbody>();
@@ -124,35 +129,136 @@ public class v1PlayerController : MonoBehaviour
 
     private void GenerateProblem()
     {
-        // Generate two random numbers and a random operator (+, -, *, /)
-        num1 = Random.Range(1, 10);
-        num2 = Random.Range(1, 10);
-        int operatorIndex = Random.Range(0, 4);
-        char op = '+';
-        switch (operatorIndex)
+        for (int i = 0; i < 5; i++)
         {
-            case 0:
-                correctAnswer = num1 + num2;
-                break;
-            case 1:
-                op = '-';
-                correctAnswer = num1 - num2;
-                break;
-            case 2:
-                op = '*';
-                correctAnswer = num1 * num2;
-                break;
-            case 3:
-                op = '/';
-                num1 = Random.Range(1, 10) * num2;
-                correctAnswer = num1 / num2;
-                break;
+            operands[i] = UnityEngine.Random.Range(-opMax, opMax);
         }
 
-        // Display the problem in the UI
+        // Weed out some negatives
+        for (int i = 0; i < 5; i++)
+        {
+            if (operands[i] < 0)
+            {
+                if (1 == UnityEngine.Random.Range(0, 100) % 4)
+                {
+                    operands[i] = operands[i];
+                }
+                else
+                {
+                    operands[i] = -operands[i];
+                }
+            }
+        }
+
+
+        correctAnswer = 1;
+        bool open = false;
+        // First term inside parenthesis?
+            // First term negative and need wrapped?
+        string problemString = "";
+        if (1 == UnityEngine.Random.Range(0, 100) % 10)
+        {
+            if (operands[0] < 0) 
+            {
+                problemString = $"(({operands[0]}) ";
+                open = true;
+            }
+            else
+            {
+                problemString = $"({operands[0]} ";
+                open = true;
+            }
+        }
+        else
+        {
+            if (operands[0] < 0)
+            {
+                problemString = $"({operands[0]}) ";
+            }
+            else
+            {
+                problemString = $"{operands[0]} ";
+            }
+        }
+
+        for (int i = 0; i < difficulty; i++)
+        {
+            // Which operator are we using this time?
+            int operatorIndex = UnityEngine.Random.Range(0, 3);
+
+            // Wrap negative operands in parenthesis
+                // Open or close parenthesis as needed
+            string operand;
+            if (operands[i + 1] < 0)
+            {
+                if (1 == UnityEngine.Random.Range(0, 100) % 10)
+                {
+                    if (open)
+                    {
+                        open = false;
+                        operand = $"({operands[i + 1]})) ";
+                    }
+                    else
+                    {
+                        open = true;
+                        operand = $"(({operands[i + 1]}) ";
+
+                    }
+                }
+                else
+                {
+                    operand = $"({operands[i + 1]}) ";
+
+                }
+            }
+            else
+            {
+                if (1 == UnityEngine.Random.Range(0, 100) % 10)
+                {
+                    if (open)
+                    {
+                        open = false;
+                        operand = $"{operands[i + 1]}) ";
+                    }
+                    else
+                    {
+                        open = true;
+                        operand = $"({operands[i + 1]} ";
+
+                    }
+                }
+                else
+                {
+                    operand = $"{operands[i + 1]} ";
+
+                }
+            }
+
+            // append the operator to the front of the string
+            switch (operatorIndex)
+            {
+                case 0:
+                    problemString += $"+ {operand}";
+                    break;
+                case 1:
+                    problemString += $"- {operand}";
+                    break;
+                case 2:
+                    problemString += $"* {operand}";
+                    break;
+                }
+        }
+
+        if (open)
+        {
+            problemString += ") ";
+        }
+        correctAnswer = EvaluateExpression(problemString);
+        problemString += "= ";
+        Debug.Log(correctAnswer);
         if (hasStarted){ 
-            problemText.text = $"{num1} {op} {num2} =";
-            answerInputField.ActivateInputField(); 
+            problemText.text = problemString;
+            answerInputField.ActivateInputField();
         }
     }
     
@@ -162,5 +268,93 @@ public class v1PlayerController : MonoBehaviour
         startButton.gameObject.SetActive(false);
         hasStarted = true;
         GenerateProblem();
+    }
+
+    public static int EvaluateExpression(string expression)
+    {
+        // Remove all spaces from the expression
+        expression = expression.Replace(" ", "");
+
+        var result = 0;
+        var operatorType = '+';
+        var number = "";
+        var stack = new Stack<int>();
+        var lastOperatorStack = new Stack<char>();
+        bool negging = false;
+        char lastChar = ' ';
+
+        foreach (var ch in expression)
+        {
+
+            if (lastChar == '(')
+            {
+                negging = true;
+            } 
+            else
+            {
+                negging = false;
+            }
+            lastChar = ch;
+            if (Char.IsDigit(ch) || (ch == '-' && negging))
+            {
+                number += ch;
+            }
+            else if (ch == '+' || ch == '-' || ch == '*')
+            {
+                if (number.Length > 0)
+                {
+                    result = ApplyOperator(result, Int32.Parse(number), operatorType);
+                    number = "";
+                }
+
+                operatorType = ch;
+            }
+            else if (ch == '(')
+            {
+                stack.Push(result);
+                lastOperatorStack.Push(operatorType);
+                result = 0;
+                operatorType = '+';
+            }
+            else if (ch == ')')
+            {
+                if (number.Length > 0)
+                {
+                    result = ApplyOperator(result, Int32.Parse(number), operatorType);
+                    number = "";
+                }
+
+                var lastOperator = lastOperatorStack.Pop();
+                var lastResult = stack.Pop();
+
+                result = ApplyOperator(lastResult, result, lastOperator);
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid character: {ch}");
+            }
+        }
+
+        if (number.Length > 0)
+        {
+            result = ApplyOperator(result, Int32.Parse(number), operatorType);
+        }
+
+        return result;
+    }
+
+    private static int ApplyOperator(int leftOperand, int rightOperand, char operatorType)
+    {
+        switch (operatorType)
+        {
+            case '+':
+                return leftOperand + rightOperand;
+            case '-':
+                return leftOperand - rightOperand;
+            case '*':
+                return leftOperand * rightOperand;
+            default:
+                throw new ArgumentException($"Invalid operator: {operatorType}");
+        }
     }
 }

@@ -24,4 +24,9 @@ public class MenuManager : MonoBehaviour
     public void setGameStartScene(int scene) {
         gameStartScene = scene;
     }    
+
+    public int getDifficulty()
+    {
+        return gameStartScene;
+    }
 }
