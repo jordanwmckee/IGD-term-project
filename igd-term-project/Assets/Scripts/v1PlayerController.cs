@@ -164,7 +164,7 @@ public class v1PlayerController : MonoBehaviour
             string operand;
             if (operands[i + 1] < 0)
             {
-                if (1 == UnityEngine.Random.Range(0, 100) % 2)
+                if (1 == UnityEngine.Random.Range(0, 100) % 10)
                 {
                     if (open)
                     {
@@ -186,7 +186,7 @@ public class v1PlayerController : MonoBehaviour
             }
             else
             {
-                if (1 == UnityEngine.Random.Range(0, 100) % 2)
+                if (1 == UnityEngine.Random.Range(0, 100) % 10)
                 {
                     if (open)
                     {
