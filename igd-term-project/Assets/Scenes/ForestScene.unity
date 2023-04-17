@@ -1842,7 +1842,7 @@ MonoBehaviour:
   finishLineXPosition: 2000
   carAnimator: {fileID: 1924859380}
   startButton: {fileID: 1264720461}
-  SpeechBubble: {fileID: 0}
+  SpeechBubble: {fileID: 2037016816}
   hasFinished: 0
   answerInputField: {fileID: 2115152327}
   problemText: {fileID: 1402503897}

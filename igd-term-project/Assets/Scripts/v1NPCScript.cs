@@ -23,6 +23,7 @@ public class v1NPCScript : MonoBehaviour
     private v1PlayerController player;
 
     private void Awake() {
+        Debug.Log("NPC is Awake!");
         instance = this;
     }
 
